@@ -1,0 +1,75 @@
+doctype html
+html(lang="en")
+	head
+		meta(charset="UTF-8")
+		title Beer Locker Backbone
+		link(rel="stylesheet" href="/bootstrap/css/bootstrap.min.css")
+	body
+		div.container
+			h1 My Beer
+			div.page
+
+			div#editForm.modal.fade
+				.modal-dialog
+					.modal-content
+						.modal-header
+							h4 Edit Beer
+						.modal-body
+							form(action="<%= url %>" method="post")
+								.form-group
+									label.control-label(for="name") Beer Name
+									input.form-control(type="text" name="name" id="name" value="<% beer.get('name') %>")
+								.form-group
+									label.control-label(for="type") Beer Type
+									input.form-control(type="text" name="type" id="type" value="<% beer.get('type') %>")
+								.form-group
+									label.control-label(for="quantity") Quantity
+									input.form-control(type="text" name="quantity" id="quantity" value="<% beer.get('quantity') %>")
+						.modal-footer
+							button(type='submit').btn.btn-primary Submit
+							button.btn.btn-link Cancel
+				
+		script(src="/jquery/jquery.min.js")
+		script(src="/underscore/underscore-min.js")
+		script(src="/backbone/backbone.js")
+		script(src="/bootstrap/js/bootstrap.min.js")
+		script(type="text/template" id="beerTable").
+			<table class="table">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Type</th>
+						<th>Quantity</th>
+						<th>Edit</th>
+					</tr>
+				</thead>
+				<tbody>
+				<% _.each(beers, function(beer) { %>
+					<tr>
+						<td> <%= beer.get("name") %></td>
+						<td> <%= beer.get("type") %></td>
+						<td> <%= beer.get("quantity") %></td>
+						<td>
+							<button class="btn btn-link edit-beer" type="button"><span class="glyphicon glyphicon-edit"></span></button>
+							<a class="btn btn-link" href="/backbone/<%= beer.get("_id")%>"><span class="glyphicon glyphicon-eye-open"></span></a>
+							<input type="hidden" name="beerID" value="<%= beer.get("_id")%>"/>
+					</tr>
+				<% }); %>
+				</tbody>
+			</table>
+		script(type="text/template" id="editForm").
+			<form action="<%= url %>" method="post">
+				<div class="form-group">
+					<label for="name" class="control-label">Beer Name</label>
+					<input type="text" name="name" id="name" value="<%= beer.get('name') %>" class="form-control">
+				</div>
+				<div class="form-group">
+					<label for="type" class="control-label">Beer Type</label>
+					<input type="text" name="type" id="type" value="<%= beer.get('type') %>" class="form-control">
+				</div>
+				<div class="form-group">
+					<label for="quantity" class="control-label">Quantity</label>
+					<input type="text" name="quantity" id="quantity" value="<%= beer.get('quantity') %>" class="form-control">
+				</div>
+			</form>
+		script(src="/public/js/backboneApp.js")

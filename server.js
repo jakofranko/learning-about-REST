@@ -4,7 +4,9 @@ var session = require('express-session');
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var passport = require('passport');
-var ejs = require('ejs');
+var jade = require('jade');
+
+// Configure ejs for use in conjunction with Underscore
 
 // Load controllers
 var beerController = require('./controllers/beer');
@@ -18,7 +20,7 @@ mongoose.connect('mongodb://localhost:27017/backbone');
 
 // Create our Express application
 var app = express();
-app.set('view engine', 'ejs')
+app.set('view engine', 'jade')
 
 // Use the body-parser package in our application
 app.use(bodyParser.urlencoded({
@@ -52,7 +54,7 @@ router.route('/beers/:beer_id')
 // Create endpoint handlers for /users
 router.route('/users')
   .post(userController.postUsers)
-  .get(authController.isAuthenticated, userController.getUsers);
+  .get(userController.getUsers);
 
 // Create endpoint handlers for /clients
 router.route('/clients')
@@ -71,6 +73,19 @@ router.route('/oauth2/token')
 
 // Register all our routes with /api
 app.use('/api', router);
+
+// Route for handling /backbone
+app.route('/backbone')
+  .get(function(req, res) {
+    res.render('backbone');
+  });
+
+// Routing for static directories
+app.use('/jquery', express.static(__dirname + '/bower_components/jquery/dist'));
+app.use('/underscore', express.static(__dirname + '/bower_components/underscore'));
+app.use('/backbone', express.static(__dirname + '/bower_components/backbone'));
+app.use('/bootstrap', express.static(__dirname + '/bower_components/bootstrap/dist'));
+app.use('/public', express.static(__dirname + '/public'));
 
 // Start the server
 app.listen(3000);
